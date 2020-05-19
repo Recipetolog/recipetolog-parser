@@ -1,9 +1,9 @@
 import json
-from typing import List
+from typing import Tuple
 
 
 class Ingredient:
-    def __init__(self, src: List[str]):
+    def __init__(self, src: Tuple[str, str]):
         self.name, self.amount = src[0].strip(), src[1].strip()
         self.name = self.name.replace('\t', ' ').strip()
 
@@ -17,4 +17,4 @@ class Ingredient:
         return {'name': self.name, 'amount': self.amount}
 
     def __repr__(self) -> str:
-        return self.get_ingredient_name() + ' - ' + self.get_amount()
+        return self.get_ingredient_name() + ' ^ ' + self.get_amount()
