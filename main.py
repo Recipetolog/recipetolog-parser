@@ -30,6 +30,7 @@ if not os.path.exists('./out'):
 while recipes_quantity > 0:
     try:
         print('.', end='')
+        time.sleep(5)
         bytes_url = s.get("https://www.russianfood.com/recipes/recipe.php?rid={0}".format(counter))
         counter += 1
         html_doc = bytes_url.text
@@ -38,7 +39,7 @@ while recipes_quantity > 0:
 
         t = decode_russian_food_com(html_doc)
 
-        with open('./out/out_recipe{0}.txt'.format(recipes_quantity), 'w') as f:
+        with open('./out/out_recipe{0}.json'.format(recipes_quantity), 'w') as f:
             f.write(t.to_json())
             recipes_quantity -= 1
             print('\n', recipes_quantity)
