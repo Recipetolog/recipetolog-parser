@@ -5,13 +5,14 @@ from bs4 import BeautifulSoup
 from Recipe import Recipe
 import re
 
-pattern = re.compile('([А-Яа-я ]+)[-–—‒―⸺⸻](.+)')
+pattern = re.compile(
+    '([АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяa-zA-Z- ]+)[\t ]{0,1}[-–—‒―⸺⸻] (.+)')
 
 
 def split_ingredient(ingr: str) -> Tuple[str, str]:
     groups = pattern.findall(ingr)
     if len(groups) == 0:
-        if ingr.strip()[-1] == ':':
+        if len(ingr.strip()) > 0 and ingr.strip()[-1] == ':':
             return '', ''
         else:
             return ingr, ''

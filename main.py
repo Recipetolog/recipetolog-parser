@@ -1,3 +1,5 @@
+from typing import List
+
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -6,6 +8,7 @@ from os import listdir
 from os.path import isfile, join
 import sys
 import time
+import re
 from RussianFoodComfRecipe import decode_russian_food_com
 
 
@@ -21,15 +24,43 @@ def send(json_str: str):
 def send_all():
     out_dir = './out'
     onlyfiles = [f for f in listdir(out_dir) if isfile(join(out_dir, f))]
-    for filename in onlyfiles:
-        with open(join(out_dir, filename), 'r') as f:
-            send(f.read())
+    print(len(onlyfiles))
+    # for filename in onlyfiles:
+    #     with open(join(out_dir, filename), 'r') as f:
+    #         send(f.read())
 
 
-id_list = [156189, 152510, 134935, 121118, 123433, 156089, 137206, 102711, 121844, 138963, 131965, 151327, 123940,
-           152213, 58655, 126678, 121626, 130693, 140838, 122737, 134924, 141692, 123559, 136031, 117690, 142942,
-           132454, 131921, 127181, 132593, 137701, 107064, 146941, 142047, 147963, 131921, 141929, 132716, 138276,
-           146833, 136624, 129231, 139537, 125424, 149096, 129003, 134420, 129110, 145571, 122889]
+def get_id(url: str) -> int:
+    rid = pattern.findall(url)
+    return int(rid[0])
+
+
+def get_id_from_list(url: str) -> List[int]:
+    bytes_url = requests.get(url)
+    html_doc = bytes_url.text
+    soup = BeautifulSoup(html_doc, 'html.parser')
+    recipe_list = soup.find('div', {'class': 'recipe_list_new'}).find_all('div', {'class': 'title'})
+    ar = [get_id(el.find('a')['href']) for el in recipe_list]
+    return ar
+
+
+pattern = re.compile('rid=([0-9]+)')
+
+fids = [6, 5, 1535, 8, 2, 9]
+
+accum = []
+for i in fids:
+    time.sleep(5)
+    print('.', end='')
+    sys.stdout.flush()
+    accum += get_id_from_list('https://www.russianfood.com/recipes/bytype/?fid={0}'.format(i))
+print(accum)
+
+# send_all()
+
+print('')
+
+id_list = set(accum)
 print(len(id_list))
 if not os.path.exists('./out'):
     os.mkdir('./out')
