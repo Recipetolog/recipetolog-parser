@@ -24,10 +24,9 @@ def send(json_str: str):
 def send_all():
     out_dir = './out'
     onlyfiles = [f for f in listdir(out_dir) if isfile(join(out_dir, f))]
-    print(len(onlyfiles))
-    # for filename in onlyfiles:
-    #     with open(join(out_dir, filename), 'r') as f:
-    #         send(f.read())
+    for filename in onlyfiles:
+        with open(join(out_dir, filename), 'r') as f:
+            send(f.read())
 
 
 def get_id(url: str) -> int:
